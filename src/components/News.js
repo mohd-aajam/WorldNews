@@ -17,69 +17,39 @@ export class News extends Component {
     category: PropTypes.string,
 
   }
-
-  constructor() {
-    super();
+  capitaliseFirstLetter =(string)=>{ 
+    return string.charAt(0).toUpperCase() + string.slice(1);
+  }
+  constructor(props) {
+    super(props);
     this.state = {
       articles: [],
       loading: false,
       page: 1,
     };
+    document.title=`${this.capitaliseFirstLetter(this.props.category)}-WorldNews `
   }
 
-  async componentDidMount() {
-    // fetch news
-    let url = `https://newsapi.org/v2/top-headlines?country=${this.props.country}&category=${this.props.category}&apiKey=cb478271397e498f9cce4f6f816f144f&page=1&pageSize=${this.props.pageSize}`;
+  async updateNews(){
+    let url = `https://newsapi.org/v2/top-headlines?country=${this.props.country}&category=${this.props.category}&apiKey=cb478271397e498f9cce4f6f816f144f&page=${this.state.page}&pageSize=${this.props.pageSize}`;
     this.setState({ loading: true });
     let data = await fetch(url);
     let parsedData = await data.json();
     this.setState({
       articles: parsedData.articles,
       totalResults: parsedData.totalResults,
-      loading: false,
-    });
-  }
+      loading: false}
+      );
+ }
 
-  handleNextClick = async () => {
-    //next news
-
-    if (!(
-      this.state.page + 1 >
-      Math.ceil(this.state.totalResults / this.props.pageSize)
-    )) {
-      let url = `https://newsapi.org/v2/top-headlines?country=${this.props.country}&category=${this.props.category}&apiKey=cb478271397e498f9cce4f6f816f144f&page=${this.state.page + 1
-        }&pageSize=${this.props.pageSize}`;
-      this.setState({ loading: true });
-      let data = await fetch(url);
-      let parsedData = await data.json();
-
-      this.setState({
-        page: this.state.page + 1, //update page
-        articles: parsedData.articles,
-        loading: false,
-      });
-    }
-  };
-
-  handlePrevClick = async () => {
-    // previous news
-
-    let url = `https://newsapi.org/v2/top-headlines?country=${this.props.country}&category=${this.props.category}&apiKey=cb478271397e498f9cce4f6f816f144f&page=${this.state.page - 1
-      }&pageSize=${this.props.pageSize}`;
-    this.setState({ loading: true });
-    let data = await fetch(url);
-    let parsedData = await data.json();
-    this.setState({
-      page: this.state.page - 1,
-      articles: parsedData.articles,
-      loading: false
-    });
-  };
+ async componentDidMount(){
+  this.updateNews();
+ }
 
   render() {
     return (
       <div className="container my-3">
-        <h1 className="text-center" style={{ margin: '35px' }}>WorldNews - Top Headlines</h1>
+        <h1 className="text-center" style={{ margin: '20px' }}>WorldNews - Top {this.capitaliseFirstLetter(this.props.category)} headlines</h1>
         {this.state.loading && <Spinner />}
         <div className="row">
           {!this.state.loading &&
@@ -104,21 +74,18 @@ export class News extends Component {
             disabled={this.state.page <= 1}
             type="button"
             className="btn btn-dark"
-            onClick={this.handlePrevClick}
-          >
-            {" "}
+            onClick={() =>{ this.setState({page: this.state.page-1}); this.updateNews(); }}>{" "}
             &larr; Previous{" "}
           </button>
+
           <button
             type="button"
             className="btn btn-dark mx-5"
             disabled={
               this.state.page + 1 >
               Math.ceil(this.state.totalResults / this.props.pageSize)
-            } //disable when it is last page
-            onClick={this.handleNextClick}
-          >
-            {" "}
+            } //disable when it is last page           
+            onClick={() =>{ this.setState({page: this.state.page+1}); this.updateNews(); }}>{" "}
             Next &rarr;{" "}
           </button>
         </div>

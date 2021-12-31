@@ -1,27 +1,27 @@
 import React, { Component } from "react";
 import NavBar from "./components/NavBar";
 import News from "./components/News";
-import {BrowserRouter,Routes,Route} from "react-router-dom";
+import {BrowserRouter as Router ,Routes,Route} from "react-router-dom";
 
 export default class App extends Component {
+  pageSize=10;
   render() {
     return (
       <>
      <div>       
-        <BrowserRouter>
-        <NavBar />
-        
+        <Router>
+        <NavBar />        
         <Routes>
-          <Route key="general" path="/" > <News pageSize={5} country="in" category="science" /></Route>          
-          <Route key="general" path="/general"><News pageSize={5} country="in" category="general" /> </Route>          
-          <Route key="business" path="/business"><News pageSize={5} country="in" category="business" /> </Route>          
-          <Route key="entertainment" path="/entertainment"><News pageSize={5} country="in" category="entertainment" /> </Route>          
-          <Route key="health" path="/health"><News pageSize={5} country="in" category="health" /> </Route>          
-          <Route key="science" path="/science"><News pageSize={5} country="in" category="science" /> </Route>          
-          <Route key="sports" path="/sports"><News pageSize={5} country="in" category="sports" /> </Route>          
-          <Route key="technology" path="/technology"><News pageSize={5} country="in" category="technology" /> </Route> 
+          <Route  path="/"  element={<News key="general" pageSize={this.pageSize} country="in" category="general" />}/>          
+          <Route  path="/general" element={<News key="general" pageSize={this.pageSize} country="in" category="general" /> }/>      
+          <Route  path="/business" element={<News key="business" pageSize={this.pageSize} country="in" category="business" />}/>
+          <Route path="/entertainment" element={<News key="entertainment" pageSize={this.pageSize} country="in" category="entertainment"/>}/>       
+          <Route path="/health" element={<News key="health" pageSize={this.pageSize} country="in" category="health" />}/>
+          <Route path="/science" element={<News key="science"  pageSize={this.pageSize} country="in" category="science"/>}/>
+          <Route path="/sports" element={<News key="sports" pageSize={this.pageSize} country="in" category="sports" />}/>
+          <Route path="/technology" element={<News key="technology" pageSize={this.pageSize} country="in" category="technology"/>}/>
         </Routes>
-       </BrowserRouter>      
+       </Router>      
      </div>
      </>
       
